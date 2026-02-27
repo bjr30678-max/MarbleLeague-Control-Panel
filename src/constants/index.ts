@@ -7,6 +7,7 @@ export const API_ENDPOINTS = {
   CLOSE_BETTING: '/api/control/close-betting',
   INPUT_RESULT: '/api/control/input-result',
   CONFIRM_RESULT: '/api/control/confirm-result',
+  VOID_ROUND: '/api/control/void-round',
   LOGS: '/api/control/logs',
 } as const;
 
@@ -24,6 +25,7 @@ export const ROUND_STATUS_MAP: Record<string, string> = {
   inputting: '輸入結果中',
   settling: '結算中',
   finished: '已完成',
+  voided: '已宣告無效',
 };
 
 // 選手號碼（1-10）

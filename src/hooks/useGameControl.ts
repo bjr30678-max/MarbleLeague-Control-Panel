@@ -77,6 +77,19 @@ export const useGameControl = (isAuthenticated: boolean) => {
     }
   }, [loadStatus]);
 
+  const voidRound = useCallback(async (roundId: string, reason: string) => {
+    setLoading(true);
+    try {
+      const data = await controlService.voidRound(roundId, reason);
+      if (data.success) {
+        await loadStatus();
+      }
+      return data;
+    } finally {
+      setLoading(false);
+    }
+  }, [loadStatus]);
+
   // 防止投注中意外關閉
   useEffect(() => {
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
@@ -97,5 +110,6 @@ export const useGameControl = (isAuthenticated: boolean) => {
     startRound,
     closeBetting,
     submitResult,
+    voidRound,
   };
 };

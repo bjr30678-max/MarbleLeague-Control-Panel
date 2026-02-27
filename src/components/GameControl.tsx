@@ -3,10 +3,11 @@ import { useCountdown } from '@/hooks/useCountdown';
 import type { GameRound } from '@/types';
 import {
   CaretRightOutlined,
+  CloseCircleOutlined,
   LockOutlined,
   TrophyOutlined,
 } from '@ant-design/icons';
-import { App, Button, Card, Space } from 'antd';
+import { App, Button, Card, Input, Space } from 'antd';
 import { useEffect, useState } from 'react';
 import ResultInput from './ResultInput';
 
@@ -16,6 +17,7 @@ interface GameControlProps {
   onStartRound: () => Promise<{ success: boolean; error?: string }>;
   onCloseBetting: (roundId: string) => Promise<{ success: boolean; error?: string }>;
   onSubmitResult: (roundId: string, result: number[]) => Promise<{ success: boolean; error?: string }>;
+  onVoidRound: (roundId: string, reason: string) => Promise<{ success: boolean; error?: string }>;
 }
 
 const getStatusDotClass = (status?: string): string => {
@@ -25,6 +27,7 @@ const getStatusDotClass = (status?: string): string => {
     case 'playing':
     case 'inputting':
     case 'settling': return 'status-dot active';
+    case 'voided': return 'status-dot voided';
     default: return 'status-dot idle';
   }
 };
@@ -40,6 +43,7 @@ const GameControl: React.FC<GameControlProps> = ({
   onStartRound,
   onCloseBetting,
   onSubmitResult,
+  onVoidRound,
 }) => {
   const { timeLeft, start, stop } = useCountdown();
   const { message, modal } = App.useApp();
@@ -109,9 +113,43 @@ const GameControl: React.FC<GameControlProps> = ({
     });
   };
 
-  const canStart = !round || round.status === 'finished';
+  const handleVoidRound = () => {
+    if (!round) return;
+    let reason = '';
+    modal.confirm({
+      title: '宣告無效局',
+      content: (
+        <div>
+          <p>確定要宣告期數 {round.roundId} 為無效局嗎？所有投注將退款。</p>
+          <Input.TextArea
+            placeholder="請輸入無效局原因"
+            rows={3}
+            onChange={(e) => { reason = e.target.value; }}
+          />
+        </div>
+      ),
+      okText: '確認宣告',
+      cancelText: '取消',
+      okButtonProps: { danger: true },
+      onOk: async () => {
+        if (!reason.trim()) {
+          message.error('請輸入無效局原因');
+          throw new Error('reason required');
+        }
+        const data = await onVoidRound(round.roundId, reason);
+        if (data.success) {
+          message.success('已宣告無效局');
+        } else {
+          message.error(data.error || '操作失敗');
+        }
+      },
+    });
+  };
+
+  const canStart = !round || round.status === 'finished' || round.status === 'voided';
   const canClose = round?.status === 'betting';
   const canResult = round?.status === 'playing' || round?.status === 'inputting';
+  const canVoid = round && !['finished', 'settling', 'voided'].includes(round.status);
   const statusText = round ? (ROUND_STATUS_MAP[round.status] || round.status) : '等待開局';
 
   return (
@@ -174,6 +212,17 @@ const GameControl: React.FC<GameControlProps> = ({
               輸入結果
             </Button>
           </div>
+          <Button
+            danger
+            size="large"
+            block
+            disabled={!canVoid || loading}
+            onClick={handleVoidRound}
+            icon={<CloseCircleOutlined />}
+            className="btn-void-round"
+          >
+            宣告無效局
+          </Button>
         </Space>
       )}
 

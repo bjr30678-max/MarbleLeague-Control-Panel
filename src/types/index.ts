@@ -14,7 +14,7 @@ export interface LoginResponse {
 }
 
 // ===== 遊戲回合 =====
-export type RoundStatus = 'betting' | 'closed' | 'playing' | 'inputting' | 'settling' | 'finished';
+export type RoundStatus = 'betting' | 'closed' | 'playing' | 'inputting' | 'settling' | 'finished' | 'voided';
 
 export interface GameRound {
   roundId: string;
@@ -70,9 +70,28 @@ export interface LogEntry {
   time: string;
 }
 
+// ===== Socket 事件 =====
+export interface NewBetSingleEvent {
+  roundId: string;
+  userId: string;
+  betType: string;
+  position: number | null;
+  amount: number;
+}
+
+export interface NewBetBatchEvent {
+  roundId: string;
+  userId: string;
+  betCount: number;
+  totalAmount: number;
+}
+
+export type NewBetEvent = NewBetSingleEvent | NewBetBatchEvent;
+
 // ===== API 通用回應 =====
 export interface ApiResponse {
   success: boolean;
   error?: string;
+  message?: string;
   round?: GameRound;
 }

@@ -231,6 +231,7 @@ body {
 .status-dot.betting { background: var(--accent-gold); color: rgba(240, 185, 11, 0.4); }
 .status-dot.active { background: var(--accent-green); color: rgba(14, 203, 129, 0.4); }
 .status-dot.closed { background: var(--accent-red); color: rgba(246, 70, 93, 0.4); }
+.status-dot.voided { background: var(--accent-red); color: rgba(246, 70, 93, 0.4); animation: none; }
 .status-dot.idle { background: var(--text-muted); color: transparent; animation: none; }
 
 /* ===== 狀態資訊行 ===== */
@@ -306,6 +307,17 @@ body {
   background: var(--bg-inner) !important;
   border-color: var(--border-color) !important;
   color: var(--text-muted) !important;
+  opacity: 0.5;
+}
+
+.btn-void-round {
+  height: 44px;
+  font-weight: 600;
+  border-radius: 8px;
+  margin-top: 2px;
+}
+
+.btn-void-round:disabled {
   opacity: 0.5;
 }
 
@@ -453,6 +465,12 @@ body {
   background: rgba(94, 102, 115, 0.15);
   color: var(--text-secondary);
   border: 1px solid rgba(94, 102, 115, 0.3);
+}
+
+.round-status-tag.voided {
+  background: rgba(246, 70, 93, 0.15);
+  color: var(--accent-red);
+  border: 1px solid rgba(246, 70, 93, 0.3);
 }
 
 /* ===== 結果輸入 ===== */

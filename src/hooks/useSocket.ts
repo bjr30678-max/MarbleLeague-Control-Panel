@@ -1,4 +1,4 @@
-import type { LogLevel } from '@/types';
+import type { LogLevel, NewBetEvent } from '@/types';
 import { useCallback, useEffect, useRef } from 'react';
 import { io, Socket } from 'socket.io-client';
 
@@ -41,8 +41,14 @@ export const useSocket = (
       onEvent('error', '與伺服器斷開連線');
     });
 
-    socket.on('new-bet', (data: { userId: string; betType: string; amount: number }) => {
-      onEvent('info', `新投注 - 用戶: ${data.userId}, 類型: ${data.betType}, 金額: ${data.amount}`);
+    socket.on('new-bet', (data: NewBetEvent) => {
+      if ('betCount' in data) {
+        // 批量投注
+        onEvent('info', `新投注 - 用戶: ${data.userId}, 共 ${data.betCount} 筆, 總金額: ${data.totalAmount}`);
+      } else {
+        // 單筆投注
+        onEvent('info', `新投注 - 用戶: ${data.userId}, 類型: ${data.betType}, 金額: ${data.amount}`);
+      }
       onStatusChange();
     });
 
@@ -58,6 +64,11 @@ export const useSocket = (
 
     socket.on('result-confirmed', (data: { roundId: string }) => {
       onEvent('success', `期數 ${data.roundId} 開獎完成`);
+      onStatusChange();
+    });
+
+    socket.on('round-voided', (data: { roundId: string; reason: string }) => {
+      onEvent('error', `期數 ${data.roundId} 已宣告無效局 - 原因: ${data.reason}`);
       onStatusChange();
     });
 

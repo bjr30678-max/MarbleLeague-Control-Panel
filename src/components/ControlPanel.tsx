@@ -11,7 +11,7 @@ import StatsPanel from './StatsPanel';
 const ControlPanel: React.FC = () => {
   const { isAuthenticated, operator } = useAuth();
   const { logs, addLog } = useOperationLog();
-  const { round, stats, loading, loadStatus, startRound, closeBetting, submitResult } = useGameControl(isAuthenticated);
+  const { round, stats, loading, loadStatus, startRound, closeBetting, submitResult, voidRound } = useGameControl(isAuthenticated);
 
   const handleSocketEvent = useCallback(
     (level: 'info' | 'success' | 'warning' | 'error', message: string) => {
@@ -57,6 +57,14 @@ const ControlPanel: React.FC = () => {
     return data;
   };
 
+  const handleVoidRound = async (roundId: string, reason: string) => {
+    const data = await voidRound(roundId, reason);
+    if (data.success) {
+      addLog('error', `期數 ${roundId} 已宣告無效局 - 原因: ${reason}`);
+    }
+    return data;
+  };
+
   return (
     <div style={{ minHeight: '100vh', background: 'var(--bg-primary)' }}>
       <ControlHeader />
@@ -67,6 +75,7 @@ const ControlPanel: React.FC = () => {
           onStartRound={handleStartRound}
           onCloseBetting={handleCloseBetting}
           onSubmitResult={handleSubmitResult}
+          onVoidRound={handleVoidRound}
         />
         <StatsPanel stats={stats} />
         <div style={{ gridColumn: 'span 2' }}>

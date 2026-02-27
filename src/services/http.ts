@@ -24,7 +24,9 @@ httpClient.interceptors.request.use((config) => {
 httpClient.interceptors.response.use(
   (response) => response.data,
   (error) => {
-    if (error.response?.status === 401) {
+    // 登入請求的 401 不做自動跳轉，由呼叫端處理錯誤訊息
+    const isLoginRequest = error.config?.url?.includes('/login');
+    if (error.response?.status === 401 && !isLoginRequest) {
       sessionStorage.removeItem(STORAGE_KEYS.SESSION_ID);
       sessionStorage.removeItem(STORAGE_KEYS.OPERATOR);
       window.location.href = '/login';

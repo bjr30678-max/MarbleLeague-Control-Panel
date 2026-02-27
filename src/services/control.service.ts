@@ -32,6 +32,10 @@ export const controlService = {
     return httpClient.post(API_ENDPOINTS.CONFIRM_RESULT, { roundId });
   },
 
+  voidRound: async (roundId: string, reason: string): Promise<ApiResponse> => {
+    return httpClient.post(API_ENDPOINTS.VOID_ROUND, { roundId, reason });
+  },
+
   getLogs: async (page?: number, limit?: number): Promise<unknown> => {
     return httpClient.get(API_ENDPOINTS.LOGS, { params: { page, limit } });
   },
