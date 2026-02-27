@@ -361,17 +361,62 @@ body {
   border-color: var(--border-hover);
 }
 
-.bet-dist-item.sub {
-  margin-left: 16px;
-  background: transparent;
-  border: none;
-  padding: 6px 12px;
-  border-bottom: 1px solid var(--border-color);
-  border-radius: 0;
+/* ===== 投注細項表格 ===== */
+.bet-detail-table {
+  margin: 0 0 6px 0;
+  background: rgba(0, 0, 0, 0.15);
+  border-radius: 0 0 8px 8px;
+  margin-top: -6px;
+  border: 1px solid var(--border-color);
+  border-top: none;
+  overflow: hidden;
+}
+
+.bet-detail-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 7px 14px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+  transition: background 0.15s;
+}
+
+.bet-detail-row:last-child {
+  border-bottom: none;
+}
+
+.bet-detail-row:hover {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.bet-detail-name {
+  color: var(--text-secondary);
+  font-size: 12px;
+  padding-left: 8px;
+}
+
+.bet-detail-stats {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.bet-detail-amount {
+  color: #f0a020;
+  font-size: 12px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.bet-detail-count {
+  color: var(--text-muted);
+  font-size: 11px;
+  min-width: 32px;
+  text-align: right;
 }
 
 .bet-distribution {
-  max-height: 360px;
+  max-height: 460px;
   overflow-y: auto;
 }
 

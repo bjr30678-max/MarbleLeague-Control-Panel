@@ -26,12 +26,15 @@ export interface GameRound {
 
 // ===== 統計 =====
 export interface BetDetail {
+  betType: string;
+  position: number | null;
   betTypeName: string;
   _sum: { betAmount: number | null };
   _count: { userId: number | null };
 }
 
 export interface TypeSummary {
+  betType: string;
   betTypeName: string;
   totalAmount: number;
   totalCount: number;

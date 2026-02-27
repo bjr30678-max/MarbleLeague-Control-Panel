@@ -91,24 +91,21 @@ const StatsPanel: React.FC<StatsPanelProps> = ({ stats }) => {
                       </span>
                     </Space>
                   </div>
-                  {type.details && type.details.length > 0 && type.details.length <= 5 && (
-                    type.details.map((detail, idx) => (
-                      <div key={idx} className="bet-dist-item sub">
-                        <span style={{ color: 'var(--text-secondary)', fontSize: 12 }}>{detail.betTypeName}</span>
-                        <Space size="middle">
-                          <span style={{ color: '#f0a020', fontSize: 12 }}>
-                            ${(detail._sum.betAmount || 0).toLocaleString()}
-                          </span>
-                          <span style={{ color: 'var(--text-muted)', fontSize: 11 }}>
-                            {detail._count.userId || 0}筆
-                          </span>
-                        </Space>
-                      </div>
-                    ))
-                  )}
-                  {type.details && type.details.length > 5 && (
-                    <div style={{ paddingLeft: 28, fontSize: 11, color: 'var(--text-muted)', padding: '6px 12px 6px 28px' }}>
-                      共 {type.details.length} 個不同投注項
+                  {type.details && type.details.length > 0 && (
+                    <div className="bet-detail-table">
+                      {type.details.map((detail, idx) => (
+                        <div key={idx} className="bet-detail-row">
+                          <span className="bet-detail-name">{detail.betTypeName}</span>
+                          <div className="bet-detail-stats">
+                            <span className="bet-detail-amount">
+                              ${(detail._sum.betAmount || 0).toLocaleString()}
+                            </span>
+                            <span className="bet-detail-count">
+                              {detail._count.userId || 0}筆
+                            </span>
+                          </div>
+                        </div>
+                      ))}
                     </div>
                   )}
                 </div>
